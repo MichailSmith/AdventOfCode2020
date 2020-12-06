@@ -2,18 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"strings"
+
+	"adventofcode.com/misha/shared"
 )
 
 func main() {
-	data, err := ioutil.ReadFile("day3/input.txt")
-
-	if err != nil {
-		fmt.Println("Error opening file", err)
-	}
-
-	rowStrings := strings.Split(string(data), "\n")
+	rowStrings := shared.ReadFileLines("day3/input.txt")
 
 	rows := make([][]byte, len(rowStrings))
 	for i := range rowStrings {

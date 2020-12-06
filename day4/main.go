@@ -2,20 +2,15 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"adventofcode.com/misha/shared"
 )
 
 func main() {
-	data, err := ioutil.ReadFile("day4/input.txt")
-
-	if err != nil {
-		fmt.Println("Error opening file", err)
-	}
-
-	passportLines := strings.Split(string(data), "\n")
+	passportLines := shared.ReadFileLines("day4/input.txt")
 
 	passports := []passport{}
 

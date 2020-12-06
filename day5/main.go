@@ -2,19 +2,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sort"
-	"strings"
+
+	"adventofcode.com/misha/shared"
 )
 
 func main() {
-	data, err := ioutil.ReadFile("day5/input.txt")
-
-	if err != nil {
-		fmt.Println("Error opening file", err)
-	}
-
-	numberStrings := strings.Split(string(data), "\n")
+	numberStrings := shared.ReadFileLines("day5/input.txt")
 
 	numbers := make([]int, len(numberStrings))
 

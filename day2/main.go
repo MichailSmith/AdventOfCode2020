@@ -2,21 +2,14 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"regexp"
 	"strconv"
-	"strings"
+
+	"adventofcode.com/misha/shared"
 )
 
 func main() {
-
-	data, err := ioutil.ReadFile("day2/input.txt")
-
-	if err != nil {
-		fmt.Println("Error opening file", err)
-	}
-
-	passwordStrings := strings.Split(string(data), "\n")
+	passwordStrings := shared.ReadFileLines("day2/input.txt")
 	passwords := make([]passwordPolicy, len(passwordStrings))
 	regex := regexp.MustCompile(`(\d+)-(\d+) (.): (.*)`)
 
