@@ -21,7 +21,6 @@ func main() {
 		jolts[i+1] = value
 	}
 	sort.Ints(jolts)
-	fmt.Println(jolts)
 
 	differences := map[int]int{}
 	for i := 1; i < len(jolts); i++ {
@@ -32,11 +31,18 @@ func main() {
 
 	count := 1
 	subConnections := splitConnections(jolts)
+	possibilityChan := make(chan int)
 	for _, subset := range subConnections {
-		possibilites := findConfigurations(subset)
-		fmt.Printf("%v: %v\n", subset, possibilites)
-		count *= possibilites
+		go func(channel chan int, connections []int) {
+			channel <- findConfigurations(connections)
+		}(possibilityChan, subset)
 	}
+
+	for range subConnections {
+		number := <-possibilityChan
+		count *= number
+	}
+
 	fmt.Println(count)
 }
 

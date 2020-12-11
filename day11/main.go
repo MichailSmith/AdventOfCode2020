@@ -114,15 +114,37 @@ func getNewValue(y int, x int, grid [][]byte) (byte, bool) {
 	return grid[y][x], false
 }
 
+type seat struct {
+	x       int
+	y       int
+	value   byte
+	changed bool
+}
+
 func getNextIteration(grid [][]byte, newValueFunc func(int, int, [][]byte) (byte, bool)) ([][]byte, bool) {
 	next := make([][]byte, len(grid))
 	anyChanged := false
+	seatChannel := make(chan seat)
 	for i, row := range grid {
 		next[i] = make([]byte, len(row))
 		for j := range row {
-			newValue, valueCanged := newValueFunc(i, j, grid)
-			anyChanged = anyChanged || valueCanged
-			next[i][j] = newValue
+			go func(i int, j int, grid [][]byte, newValueFunc func(int, int, [][]byte) (byte, bool), seatChannel chan seat) {
+				newValue, valueCanged := newValueFunc(i, j, grid)
+				seatChannel <- seat{
+					x:       j,
+					y:       i,
+					value:   newValue,
+					changed: valueCanged,
+				}
+			}(i, j, grid, newValueFunc, seatChannel)
+		}
+	}
+
+	for _, row := range grid {
+		for range row {
+			newSeat := <-seatChannel
+			anyChanged = anyChanged || newSeat.changed
+			next[newSeat.y][newSeat.x] = newSeat.value
 		}
 	}
 	return next, anyChanged
